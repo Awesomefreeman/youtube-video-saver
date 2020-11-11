@@ -29,7 +29,7 @@ def get_authenticated_service():
         if credentials and credentials.expired and credentials.refresh_token:
             pass
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES) 
             credentials = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
@@ -48,7 +48,7 @@ class Request:
         self.content_details = "contentDetails"
         self.title = []
 
-    def __playlistitems__(self):
+    def __playlistitems(self):
         request = get_authenticated_service().playlistItems().list(
             part=self.snippet,
             maxResults=self.max_result,
@@ -56,7 +56,7 @@ class Request:
         )
         return request.execute()
 
-    def __next_playlistitems__(self, next_page_token):
+    def __next_playlistitems(self, next_page_token):
         request = get_authenticated_service().playlistItems().list(
             part=self.snippet,
             maxResults=self.max_result,
@@ -97,7 +97,7 @@ class Request:
         return title
 
     def get_video_id(self):
-        response = self.__playlistitems__()
+        response = self.__playlistitems()
         next_page_token = response.get("nextPageToken")
         id_list = []
         title = []
@@ -105,7 +105,7 @@ class Request:
             id_list.append(i.get("snippet").get("resourceId").get("videoId"))
             title.append(i.get("snippet").get("title"))
         while next_page_token:
-            response = self.__next_playlistitems__(next_page_token)
+            response = self.__next_playlistitems(next_page_token)
             for i in response.get("items"):
                 id_list.append(i.get("snippet").get("resourceId").get("videoId"))
                 title.append(i.get("snippet").get("title"))
