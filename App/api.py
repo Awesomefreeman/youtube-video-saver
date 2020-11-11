@@ -48,7 +48,7 @@ class Request:
         self.content_details = "contentDetails"
         self.title = []
 
-    def __playlistitems(self):
+    def _playlistitems(self):
         request = get_authenticated_service().playlistItems().list(
             part=self.snippet,
             maxResults=self.max_result,
@@ -56,7 +56,7 @@ class Request:
         )
         return request.execute()
 
-    def __next_playlistitems(self, next_page_token):
+    def _next_playlistitems(self, next_page_token):
         request = get_authenticated_service().playlistItems().list(
             part=self.snippet,
             maxResults=self.max_result,
@@ -97,7 +97,7 @@ class Request:
         return title
 
     def get_video_id(self):
-        response = self.__playlistitems()
+        response = self._playlistitems()
         next_page_token = response.get("nextPageToken")
         id_list = []
         title = []
@@ -105,7 +105,7 @@ class Request:
             id_list.append(i.get("snippet").get("resourceId").get("videoId"))
             title.append(i.get("snippet").get("title"))
         while next_page_token:
-            response = self.__next_playlistitems(next_page_token)
+            response = self._next_playlistitems(next_page_token)
             for i in response.get("items"):
                 id_list.append(i.get("snippet").get("resourceId").get("videoId"))
                 title.append(i.get("snippet").get("title"))
